@@ -148,3 +148,12 @@ create_and_animate_circles(circle_1_location=(-3, 0, 0), circle_2_location=(3, 0
                            animation_frame_end=80, final_location=(0, 0, 3),
                            final_rotation=45, scale_factor=1.5)
 """
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.context.view_layer.objects.active = bpy.data.objects["PrepGrenze"]
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.data.objects["PrepGrenze"].select_set(True)
+    bpy.data.objects["PrepGrenze"].select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.object.select_all(action='DESELECT')
