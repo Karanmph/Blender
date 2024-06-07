@@ -107,51 +107,72 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
     # Scale the duplicated object and extrude vertices
     obj = bpy.data.objects.get("PrepGrenze Volumen")
     bpy.context.scene.frame_set(20)
-    bpy.context.view_layer.objects.active = obj
+    if obj and obj.type == "MESH":
+        bpy.context.view_layer.objects.active = obj
+        # Select vertices with x > 0
     bpy.ops.object.mode_set(mode='EDIT')
-
-    # Select vertices with x > 0
-    """bpy.ops.mesh.select_all(action='DESELECT')
-    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_mode(type="VERT")
+    bpy.ops.mesh.select_all(action='DESELECT')
     bpy.ops.object.mode_set(mode='OBJECT')
-    for vert in obj.data.vertices:
-        vert.select = vert.co.x > 0
-        bpy.ops.object.mode_set(mode='EDIT')
-        bpy.ops.mesh.extrude_region_move()
-        bpy.ops.transform.resize(value=(1.2, 1.2, 1.2))
-        Select
-        vertices"""
-        """with x < 0
-            bpy.ops.object.mode_set(mode='OBJECT')
-            for vert in obj.data.vertices:
-                vert.select = vert.co.x < 0
 
-            bpy.ops.object.mode_set(mode='EDIT')
-            bpy.ops.mesh.extrude_region_move()
-            bpy.ops.transform.resize(value=(1.2, 1.2, 1.2))"""
+    for vert in bpy.context.object.data.vertices:
+        if vert.co.x > 0:
+            vert.select = True
 
-    #
-    """bpy.ops.object.mode_set(mode='OBJECT')  # Switch back to object mode"""
+    bpy.ops.object.mode_set(mode='EDIT')
+
+    # Extrude selected vertices
+    bpy.ops.mesh.extrude_region_move()
+
+    # Scale extruded region
+    bpy.ops.transform.resize(value=(1.2, 1.2, 1.2))
+    if obj and obj.type == "MESH":
+        bpy.context.view_layer.objects.active = obj
+        # Select vertices with x > 0
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_mode(type="VERT")
+    bpy.ops.mesh.select_all(action='DESELECT')
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    for vert in bpy.context.object.data.vertices:
+        if vert.co.x < 0:
+            vert.select = True
+
+    bpy.ops.object.mode_set(mode='EDIT')
+
+    # Extrude selected vertices
+    bpy.ops.mesh.extrude_region_move()
+
+    # Scale extruded region
+    bpy.ops.transform.resize(value=(1.2, 1.2, 1.2))
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value": (0, 0, 0)})
+    # Jetzt bewegen wir die extrudierte Region entlang der Z-Achse
+    bpy.ops.transform.translate(value=(0, 0, 0.1))
+    bpy.ops.object.mode_set(mode="OBJECT")
+    # add Bollean modifier
+    bpy.ops.object.modifier_add(type='BOOLEAN')
+    bpy.context.object.modifiers["Boolean"].operation = 'INTERSECT'
+    bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Stümpfe"]
+    # Erstellen Sie ein Material, falls noch nicht vorhanden
+    obj = bpy.context.object
+
+    # Erstellen Sie ein Material, falls noch nicht vorhanden
+    if not obj.material_slots:
+        obj.data.materials.append(bpy.data.materials.new(name="Viewport Color Material"))
+
+    # Holen Sie das Material
+    material = obj.active_material
+
+    # Ändern der Viewport-Farbe des Materials
+    material.diffuse_color = (1, 0.0485976, 0.0529361, 1)  # RGBA, A ist der Alpha-Wert
+
+    # Extrude und Scale für Vertices mit x <
 
 
 # Call the function with custom parameters
-"""create_and_animate_circles(circle_1_location=(-3, 0, 0), circle_2_location=(3, 0, 0),
-                           screw_angle=45, screw_offset=3, animation_frame_start=10,
-                           animation_frame_end=80, final_location=(0, 0, 3),
-                           final_rotation=45, scale_factor=1.5)"""
 
-
-# Call the function with custom parameters
-"""
 create_and_animate_circles(circle_1_location=(-3, 0, 0), circle_2_location=(3, 0, 0),
                            screw_angle=45, screw_offset=3, animation_frame_start=10,
                            animation_frame_end=80, final_location=(0, 0, 3),
                            final_rotation=45, scale_factor=1.5)
-"""
- bpy.ops.mesh.select_all(action='DESELECT')
- bpy.context.view_layer.objects.active = bpy.data.objects["Circle_001.001"]
- bpy.ops.object.select_all(action='DESELECT')
- bpy.context.view_layer.objects.active = bpy.data.objects["Circle_002.001"]
- bpy.ops.object.select_all(action='DESELECT')
- bpy.context.view_layer.objects.active = bpy.data.objects["Circle_002.002"]
- bpy.ops.object.select_all(action='DESELECT')
