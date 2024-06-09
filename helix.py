@@ -166,8 +166,92 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
 
     # Ändern der Viewport-Farbe des Materials
     material.diffuse_color = (1, 0.0485976, 0.0529361, 1)  # RGBA, A ist der Alpha-Wert
+    # show_viewport
+    bpy.context.object.modifiers["Boolean"].show_viewport = True
+    # HIDE Stümpfe
+    obj = bpy.data.objects.get("Stümpfe")
+    obj.hide_viewport = True
+    # HIDE Circle_002
+    obj = bpy.data.objects.get("Circle_002")
+    obj.hide_viewport = True
+    # Duplicate the modified object
+    bpy.ops.object.select_all(action='DESELECT')  # Deselect all objects
+    # Select the second circle
+    # Duplicate the modified object
+    # Ensure no other object is selected
+    bpy.ops.object.select_all(action='DESELECT')
 
-    # Extrude und Scale für Vertices mit x <
+    # Select 'PrepGrenze Volumen'
+    obj = bpy.data.objects.get("PrepGrenze Volumen")
+    if obj:
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+
+        # Duplicate the selected object
+        bpy.ops.object.duplicate()
+
+        # Optionally, rename the duplicated object
+        duplicated_obj = bpy.context.active_object
+        duplicated_obj.name = "PrepGrenze Volumen.größer"
+        bpy.ops.object.mode_set(mode="EDIT")
+
+        # Scale each Cricle of Duplicated_PrepGrenze_Volumen
+    obj = bpy.data.objects.get("PrepGrenze Volumen.größer")
+    if obj and obj.type == "MESH":
+        bpy.context.view_layer.objects.active = obj
+        # Select vertices with x > 0
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_mode(type="VERT")
+    bpy.ops.mesh.select_all(action='DESELECT')
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    for vert in bpy.context.object.data.vertices:
+        if vert.co.x > 0:
+            vert.select = True
+
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.transform.resize(value=(1.1, 1.1, 1.1))
+    # another Circle
+    obj = bpy.data.objects.get("PrepGrenze Volumen.größer")
+    if obj and obj.type == "MESH":
+        bpy.context.view_layer.objects.active = obj
+        # Select vertices with x > 0
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_mode(type="VERT")
+    bpy.ops.mesh.select_all(action='DESELECT')
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    for vert in bpy.context.object.data.vertices:
+        if vert.co.x < 0:
+            vert.select = True
+
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.transform.resize(value=(1.1, 1.1, 1.1))
+    bpy.ops.object.mode_set(mode='OBJECT')
+    # show viewport
+    bpy.context.object.modifiers["Boolean"].show_viewport = False
+    # hide PrepGrenze
+    obj = bpy.data.objects.get("PrepGrenze")
+    obj.hide_viewport = True
+    # hide PrepGrenze Volumen
+    obj = bpy.data.objects.get("PrepGrenze Volumen")
+    obj.hide_viewport = True
+    # show Stümpfe
+    obj = bpy.data.objects.get("Stümpfe")
+    obj.hide_viewport = False
+    # Duplicate die Falsche Bewegung
+    obj = bpy.data.objects.get("PrepGrenze Volumen.größer")
+    if obj:
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+
+        # Duplicate the selected object
+        bpy.ops.object.duplicate()
+
+        # Optionally, rename the duplicated object
+        duplicated_obj = bpy.context.active_object
+        duplicated_obj.name = "PrepGrenze Volumen.falsche Bewegung"
+    # Falsche Bewegung
 
 
 # Call the function with custom parameters
