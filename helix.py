@@ -252,6 +252,33 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
         duplicated_obj = bpy.context.active_object
         duplicated_obj.name = "PrepGrenze Volumen.falsche Bewegung"
     # Falsche Bewegung
+    # Ensure the final duplicated object "PrepGrenze Volumen.falsche Bewegung" is selected and active
+    bpy.ops.object.select_all(action='DESELECT')
+    obj_name = "PrepGrenze Volumen.falsche Bewegung"
+    if obj_name in bpy.data.objects:
+        obj = bpy.data.objects[obj_name]
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+
+        # Set the initial keyframe at frame 10 for the location (0, 0, 0)
+        bpy.context.scene.frame_set(animation_frame_start)
+        obj.location = (0, 0, 0)  # Origin at start
+        obj.keyframe_insert(data_path="location")
+
+        # Set the final keyframe at frame 80 for the location (0, 0, 3)
+        bpy.context.scene.frame_set(animation_frame_end)
+        obj.location = final_location  # Final location
+        obj.keyframe_insert(data_path="location")
+
+        # Ensure there is no rotation throughout the animation
+        obj.rotation_euler = (0, 0, 0)
+        obj.keyframe_insert(data_path="rotation_euler", frame=animation_frame_start)
+        obj.keyframe_insert(data_path="rotation_euler", frame=animation_frame_end)
+
+        # Set linear interpolation for all fcurves
+        for fcurve in obj.animation_data.action.fcurves:
+            for keyframe_point in fcurve.keyframe_points:
+                keyframe_point.interpolation = 'LINEAR'
 
 
 # Call the function with custom parameters
