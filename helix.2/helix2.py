@@ -258,6 +258,7 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
                 keyframe_point.interpolation = 'LINEAR'
 
 
+
 # Call the function with custom parameters
 
 create_and_animate_circles(circle_1_location=(-3, 0, 0), circle_2_location=(3, 0, 0),
