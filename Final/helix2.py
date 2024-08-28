@@ -1,7 +1,5 @@
 import bpy
 import math
-import bmesh
-from mathutils import Vector, kdtree
 
 
 def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(2, 0, 0),
@@ -258,26 +256,6 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
         for fcurve in obj.animation_data.action.fcurves:
             for keyframe_point in fcurve.keyframe_points:
                 keyframe_point.interpolation = 'LINEAR'
-        # Object name to delete
-
-        # List of object names to delete
-        object_names = ["Circle_002", "PrepGrenze", "PrepGrenze Volumen", "Stümpfe"]
-
-        # Deselect all objects first to ensure a clean selection
-        bpy.ops.object.select_all(action='DESELECT')
-
-        # Loop through each object name in the list
-        for obj_name in object_names:
-            # Check if the object exists in the scene
-            if obj_name in bpy.data.objects:
-                # Get the object
-                obj = bpy.data.objects[obj_name]
-
-                # Set the active object to our target
-                bpy.context.view_layer.objects.active = obj
-
-                # Select the object
-                obj.select_set(True)
 
 
 # Call the function with custom parameters
