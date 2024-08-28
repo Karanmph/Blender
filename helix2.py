@@ -1,7 +1,5 @@
 import bpy
 import math
-import bmesh
-from mathutils import Vector, kdtree
 
 
 def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(2, 0, 0),
