@@ -256,7 +256,7 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
         for fcurve in obj.animation_data.action.fcurves:
             for keyframe_point in fcurve.keyframe_points:
                 keyframe_point.interpolation = 'LINEAR'
-
+        
 
 # Call the function with custom parameters
 

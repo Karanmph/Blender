@@ -2,17 +2,16 @@ import bpy
 import math
 
 
-def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(2, 0, 0),
-                               screw_angle=30, screw_offset=2, animation_frame_start=1,
-                               animation_frame_end=60, final_location=(0, 0, 2.1),
-                               final_rotation=30, scale_factor=1.2):
+def modify_existing_object(obj_name="BeideKreise", obj_name_location=(0, 0, 0), screw_angle=30, screw_offset=2,
+                           animation_frame_start=1, animation_frame_end=60,
+                           final_location=(0, 0, 2.1), final_rotation=30,
+                           scale_factor=1.2):
     """
-    Creates two circles, joins them, adds a screw modifier, duplicates and renames the objects,
-    applies transformations, and sets keyframes for animation in Blender.
+    Modifies an existing object in Blender, adds a screw modifier, duplicates and renames the object,
+    applies transformations, and sets keyframes for animation.
 
     Parameters:
-    circle_1_location (tuple): Location of the first circle.
-    circle_2_location (tuple): Location of the second circle.
+    obj_name (str): Name of the existing object to modify.
     screw_angle (float): Angle for the screw modifier in degrees.
     screw_offset (float): Screw offset for the screw modifier.
     animation_frame_start (int): Start frame for the animation.
@@ -21,66 +20,45 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
     final_rotation (float): Final rotation angle in degrees.
     scale_factor (float): Scale factor for extrusion.
     """
-    # Add a circle
-    bpy.ops.mesh.primitive_circle_add()
-    circle_1 = bpy.context.active_object  # Access the currently active object
-    circle_1.name = "Circle_001"  # Name the circle
-    circle_1.location = circle_1_location  # Set the location of the circle
 
-    # Duplicate the circle, name it, and set its location
-    bpy.ops.object.select_all(action='DESELECT')  # Deselect all objects
-    circle_1.select_set(True)  # Select the first circle
-    bpy.context.view_layer.objects.active = circle_1  # Set it as the active object
-    bpy.ops.object.duplicate()
-    circle_2 = bpy.context.active_object  # Access the duplicated active object
-    circle_2.name = "Circle_002"  # Name the duplicated circle
-    circle_2.location = circle_2_location  # Set the location of the duplicated circle
+    # Get the existing object by name
+    obj = bpy.data.objects.get(obj_name)
+    # Set the location of the existing object
+    obj.location = obj_name_location
 
-    # Join both circles
-    bpy.ops.object.select_all(action="SELECT")  # Select all objects
-    bpy.ops.object.join()  # Join the selected objects
-    bpy.context.scene.cursor.location = (0, 0, 0)  # Set the 3D cursor to the origin
-    bpy.ops.object.origin_set(type='ORIGIN_CURSOR')  # Set the origin to the cursor
+    # Continue with the rest of the operations
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
 
     # Add a screw modifier with specific parameters
     bpy.ops.object.modifier_add(type='SCREW')
-    bpy.context.object.modifiers["Screw"].angle = math.radians(screw_angle)
-    bpy.context.object.modifiers["Screw"].screw_offset = screw_offset
-
+    obj.modifiers["Screw"].angle = math.radians(screw_angle)
+    obj.modifiers["Screw"].screw_offset = screw_offset
     # Duplicate the modified object
     bpy.ops.object.select_all(action='DESELECT')  # Deselect all objects
-    circle_2.select_set(True)  # Select the second circle
-    bpy.context.view_layer.objects.active = circle_2  # Set it as the active object
+    obj.select_set(True)  # Select the second circle
+    bpy.context.view_layer.objects.active = obj  # Set it as the active object
     bpy.ops.object.duplicate()
 
     # Rename the duplicated object and apply the modifier
     bpy.ops.object.select_all(action='DESELECT')
-    bpy.data.objects["Circle_002.001"].select_set(True)
+    bpy.data.objects["BeideKreise.001"].select_set(True)
     bpy.context.active_object.name = "Stümpfe"
     bpy.ops.object.modifier_apply(modifier="Screw")
-
     # Switch to edit mode, split vertices, and add faces
-    bpy.ops.object.editmode_toggle()
-    bpy.ops.mesh.split()
-    bpy.ops.mesh.edge_face_add()
-    bpy.ops.object.mode_set(mode='OBJECT')  # Switch back to object mode
-    bpy.ops.object.shade_flat()  # Set shading to flat
-
     # Duplicate the original circles
     bpy.ops.object.select_all(action='DESELECT')  # Deselect all objects
-    circle_2.select_set(True)  # Select the second circle
-    bpy.context.view_layer.objects.active = circle_2  # Set it as the active object
+    obj.select_set(True)  # Select the second circle
+    bpy.context.view_layer.objects.active = obj  # Set it as the active object
     bpy.ops.object.duplicate()
-
     # Rename the duplicated object and remove the screw modifier
     bpy.ops.object.select_all(action='DESELECT')
-    bpy.data.objects["Circle_002.001"].select_set(True)
+    bpy.data.objects["BeideKreise.001"].select_set(True)
     bpy.context.active_object.name = "PrepGrenze"
     obj = bpy.context.active_object
     if obj.modifiers:
         obj.modifiers.remove(obj.modifiers.get('Screw'))
-
-    # Set keyframes for location and rotation at different frames
+        # Set keyframes for location and rotation at different frames
     obj = bpy.data.objects.get("PrepGrenze")
     bpy.context.scene.frame_set(animation_frame_start)
     bpy.ops.anim.keyframe_insert_by_name(type="BUILTIN_KSI_LocRot")
@@ -103,7 +81,6 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
     bpy.context.view_layer.objects.active = bpy.data.objects["PrepGrenze"]
     bpy.ops.object.duplicate()
     bpy.context.active_object.name = "PrepGrenze Volumen"
-
     # Scale the duplicated object and extrude vertices at frame set 20
     obj = bpy.data.objects.get("PrepGrenze Volumen")
     bpy.context.scene.frame_set(20)
@@ -119,7 +96,6 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
             vert.select = True
 
     bpy.ops.object.mode_set(mode='EDIT')
-
     # Extrude selected vertices
     bpy.ops.mesh.extrude_region_move()
 
@@ -156,7 +132,6 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
     obj = bpy.context.object
     if not obj.material_slots:
         obj.data.materials.append(bpy.data.materials.new(name="Viewport Color Material"))
-
     # Get the material
     material = obj.active_material
 
@@ -181,7 +156,6 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
         duplicated_obj = bpy.context.active_object
         duplicated_obj.name = "PrepGrenze Volumen.größer"
         bpy.ops.object.mode_set(mode="EDIT")
-
     # Scale each Cricle of Duplicated_PrepGrenze_Volumen
     obj = bpy.data.objects.get("PrepGrenze Volumen.größer")
     if obj and obj.type == "MESH":
@@ -256,33 +230,9 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
         for fcurve in obj.animation_data.action.fcurves:
             for keyframe_point in fcurve.keyframe_points:
                 keyframe_point.interpolation = 'LINEAR'
-       
-        # List of object names to delete
-        object_names = ["Circle_002", "PrepGrenze", "PrepGrenze Volumen", "Stümpfe"]
-
-        # Deselect all objects first to ensure a clean selection
-        bpy.ops.object.select_all(action='DESELECT')
-
-        # Loop through each object name in the list
-        for obj_name in object_names:
-            # Check if the object exists in the scene
-            if obj_name in bpy.data.objects:
-                # Get the object
-                obj = bpy.data.objects[obj_name]
-
-                # Set the active object to our target
-                bpy.context.view_layer.objects.active = obj
-
-                # Select the object
-                obj.select_set(True)
-
-                # Delete all selected objects
-                bpy.ops.object.delete()
-
 
 # Call the function with custom parameters
-
-create_and_animate_circles(circle_1_location=(-3, 0, 0), circle_2_location=(3, 0, 0),
-                           screw_angle=45, screw_offset=3, animation_frame_start=10,
-                           animation_frame_end=80, final_location=(0, 0, 3),
-                           final_rotation=45, scale_factor=1.5)
+modify_existing_object(obj_name="BeideKreise", obj_name_location=(2, 0, 0), screw_angle=45, screw_offset=3,
+                       animation_frame_start=1, animation_frame_end=80,
+                       final_location=(0, 0, 3), final_rotation=45,
+                       scale_factor=1.5)
