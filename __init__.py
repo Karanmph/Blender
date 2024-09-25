@@ -1,6 +1,6 @@
 import bpy
 from math import radians
-from Final.add_on.helix2_2 import create_and_animate_circles
+from helix2 import create_and_animate_circles
 
 
 # Panel UI Class
