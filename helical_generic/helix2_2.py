@@ -2,10 +2,15 @@ import bpy
 import math
 
 
-def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(2, 0, 0),
-                               screw_angle=30, screw_offset=2, animation_frame_start=1,
-                               animation_frame_end=60, final_location=(0, 0, 2.1),
-                               final_rotation=30, scale_factor=1.2):
+def create_and_animate_circles(circle_1_location=(-2, 0, 0),
+                               circle_2_location=(2, 0, 0),
+                               screw_angle=30,
+                               screw_offset=2,
+                               animation_frame_start=1,
+                               animation_frame_end=60,
+                               final_location=(0, 0, 2.1),
+                               final_rotation=30,
+                               scale_factor=None):
     """
     Creates two circles, joins them, adds a screw modifier, duplicates and renames the objects,
     applies transformations, and sets keyframes for animation in Blender.
@@ -37,7 +42,8 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
     circle_2.location = circle_2_location  # Set the location of the duplicated circle
 
     # Join both circles
-    bpy.ops.object.select_all(action="SELECT")  # Select all objects
+    for ob in bpy.data.objects:
+        ob.select_set(ob in [circle_1, circle_2])
     bpy.ops.object.join()  # Join the selected objects
     bpy.context.scene.cursor.location = (0, 0, 0)  # Set the 3D cursor to the origin
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR')  # Set the origin to the cursor
@@ -182,7 +188,7 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
         duplicated_obj.name = "PrepGrenze Volumen.größer"
         bpy.ops.object.mode_set(mode="EDIT")
 
-    # Scale each Cricle of Duplicated_PrepGrenze_Volumen
+    # Scale each Circle of Duplicated_PrepGrenze_Volumen
     obj = bpy.data.objects.get("PrepGrenze Volumen.größer")
     if obj and obj.type == "MESH":
         bpy.context.view_layer.objects.active = obj
@@ -280,9 +286,11 @@ def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(
                 bpy.ops.object.delete()
 
 
+"""
 # Call the function with custom parameters
 
 create_and_animate_circles(circle_1_location=(-3, 0, 0), circle_2_location=(3, 0, 0),
                            screw_angle=45, screw_offset=3, animation_frame_start=10,
                            animation_frame_end=80, final_location=(0, 0, 3),
                            final_rotation=45, scale_factor=1.5)
+"""
