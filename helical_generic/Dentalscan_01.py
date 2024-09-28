@@ -6,7 +6,7 @@ import math
 
 def modify_existing_object(obj_name="BeideKreise", obj_name_location=(0, 0, 0), screw_angle=30, screw_offset=2,
                            animation_frame_start=1, animation_frame_end=60,
-                           final_location=(0, 0, 4.2), final_rotation=30,
+                           final_location=(0, 0, 1.2), final_rotation=30,
                            scale_factor=1.2):
     """
     Modifies an existing object in Blender, adds a screw modifier, duplicates and renames the object,
