@@ -2,7 +2,7 @@ import bpy
 import math
 
 
-def create_and_animate_circles(circle_1_location=(-4, 0, 0), circle_2_location=(2, 0, 0),
+def create_and_animate_circles(circle_1_location=(-2, 0, 0), circle_2_location=(2, 0, 0),
                                screw_angle=30, screw_offset=2, animation_frame_start=1,
                                animation_frame_end=60, final_location=(0, 0, 2.1),
                                final_rotation=30, scale_factor=1.2):
