@@ -3,9 +3,9 @@ from importlib import reload
 
 # make sure to update the dependent scripts
 from . import helix2_2
-reload(helix2_2)
+reload(helix2.1)
 
-from .helix2_2 import create_and_animate_circles
+from .helix2.1 import create_and_animate_circles
 
 
 # Panel UI Class
