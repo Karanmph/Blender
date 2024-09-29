@@ -1,11 +1,8 @@
 import bpy
 from importlib import reload
 
-# make sure to update the dependent scripts
-from . import helix4
-reload(helix4)
-
-from .helix4 import create_and_animate_circles
+import helix4
+from helix4 import create_and_animate_circles
 
 
 # Panel UI Class
